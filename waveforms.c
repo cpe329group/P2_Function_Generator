@@ -11,7 +11,7 @@ void square(int freq, int duty);
 void sine(int freq);
 void sawtooth(int freq);
 
-void square(int freq, int duty)
+void square(int fIn, int duty)
 {
     int fSys = 3000000;
     timerA.setVal(0, fSys/fIn * duty/10);

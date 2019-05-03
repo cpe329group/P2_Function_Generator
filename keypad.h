@@ -15,6 +15,8 @@ struct keypadInterface {
     char (*poll)(void);
     uint8_t (*pressed)(void);
     void (*release)(char key);
+    void(*enableInt)(void);
+    void(*disableInt)(void);
 };
 
 extern const struct keypadInterface keypad;

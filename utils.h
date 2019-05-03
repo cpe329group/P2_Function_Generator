@@ -12,6 +12,7 @@
 
 enum Direction {OUTPUT, INPUT, INPUT_PU, INPUT_PD};
 enum PinState {LOW, HIGH};
+enum EDGE {RISING, FALLING};
 
 void delay_us(int us);
 void setDCO(int freq);

@@ -33,8 +33,9 @@ void main(void)
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
 
 	//Initialization Stuffs
-	setDCO(freq24MHz); //24MHz
+	setDCO(freq24Mhz); //24MHz
 	spi.init();
+	keypad.enableInt();
 	SCB->SCR &= ~SCB_SCR_SLEEPONEXIT_Msk;               //Wake on exit from ISR.
 	__enable_irq();                                     //Enable global interrupts
 	__DSB();
@@ -142,7 +143,7 @@ void TA0_0_IRQHandler(void)
        switch(waveOut)
        {
        case SQUARE:
-           dacVal = squareLUT[LUTInc];
+           dacVal = 4096;
            break;
        case SAWTOOTH:
            dacVal = sawtoothLUT[LUTInc];
@@ -154,6 +155,15 @@ void TA0_0_IRQHandler(void)
 
        LUTInc += 1;
        spi.toDAC(dacVal);
+    }
+}
+
+void TA0_N_IRQHandler(void)
+{
+    if(TIMER_A0->CCTL[1] & TIMER_A_CCTLN_CCIFG & waveOut == SQUARE)
+    {
+        TIMER_A0->CCTL[1] &= ~TIMER_A_CCTLN_CCIFG;
+        spi.toDAC(0);
     }
 }
 
