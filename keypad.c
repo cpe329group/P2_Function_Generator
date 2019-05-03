@@ -39,6 +39,11 @@ uint8_t keyPress(void){ //Quickly check if a key is pressed.
     return KPD_PORT->IN & (KPD_COL3 | KPD_COL2 | KPD_COL1);
 }
 
+void release(char key){
+    while(key == poll());
+}
+
+
 char poll(void){    //Determine which key is pressed.
     uint8_t CURRENT_ROW = (uint8_t)KPD_ROW1;
     uint8_t ACTIVE_COL = 0x00;
@@ -63,5 +68,7 @@ char poll(void){    //Determine which key is pressed.
 
 const struct keypadInterface keypad = {
      .init = KPD_init,
-     .poll = poll
+     .poll = poll,
+     .pressed = keyPress,
+     .release = release
 };
