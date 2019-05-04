@@ -21,17 +21,17 @@ void square(int fIn, int duty)
 
 void sine(int fIn)
 {
-    int lenLUT = 1;
+    int lenLUT = 100;
     int fSys = 3000000;
-    timerA.setVal(0, fSys/fIn/lenLUT);
+    timerA.setVal(0, fSys/fIn/lenLUT/7*2);
     timerA.init(UP, 8);
 }
 
 void sawtooth(int fIn)
 {
-    int lenLUT = 1;
+    int lenLUT = 100;
     int fSys = 3000000;
-    timerA.setVal(0, fSys/fIn/lenLUT);
+    timerA.setVal(0, fSys/fIn/lenLUT/7*2);
     timerA.init(UP, 8);
 }
 

@@ -7,16 +7,6 @@
 #include "keypad.h"
 #include "msp.h"
 
-#define KPD_PORT P5
-#define KPD_ROW1 BIT0  //PIN2
-#define KPD_ROW2 BIT1  //PIN7
-#define KPD_ROW3 BIT2  //PIN6
-#define KPD_ROW4 BIT3  //PIN4
-
-#define KPD_COL1 BIT4  //PIN3
-#define KPD_COL2 BIT5  //PIN1
-#define KPD_COL3 BIT6  //PIN5
-
 void KPD_init(void);
 char poll(void);
 void release(char key);
@@ -59,8 +49,10 @@ char poll(void){    //Determine which key is pressed.
         delay_us(100);
         ACTIVE_COL = (KPD_PORT->IN & (KPD_COL3 | KPD_COL2 | KPD_COL1)) >> 4;
         for(COL = 0; COL < 3; COL++){
-            if(ACTIVE_COL & BIT0)
+            if(ACTIVE_COL & BIT0){
+                KPD_PORT->IE |= (KPD_COL1|KPD_COL2|KPD_COL3); //Re-enable interrupts
                 return KPD_LOOKUP[ROW][COL];
+            }
             else
                 ACTIVE_COL = ACTIVE_COL >> 1;
         }
@@ -71,15 +63,11 @@ char poll(void){    //Determine which key is pressed.
 
 void enableKPDInt()
 {
+    KPD_PORT->OUT |= (KPD_ROW4 | KPD_ROW3 | KPD_ROW2 | KPD_ROW1);
     KPD_PORT->IES = 0;
+    KPD_PORT->IFG = 0;
     KPD_PORT->IE |= (KPD_COL1|KPD_COL2|KPD_COL3);
-    NVIC->ISER[0] |= 1 << (PORT5_IRQn & 31);
-}
-
-void disableKPDInt()
-{
-    KPD_PORT->IE &= ~(KPD_COL1|KPD_COL2|KPD_COL3);
-    NVIC->ISER[0] &= ~(1 << (PORT5_IRQn & 31));
+    NVIC->ISER[1] |= 1 << (PORT5_IRQn & 31);
 }
 
 const struct keypadInterface keypad = {
@@ -88,5 +76,4 @@ const struct keypadInterface keypad = {
      .pressed = keyPress,
      .release = release,
      .enableInt = enableKPDInt,
-     .disableInt = disableKPDInt
 };
