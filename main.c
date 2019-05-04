@@ -182,7 +182,6 @@ void TA0_0_IRQHandler(void)
        switch(waveOut)
        {
        case SQUARE:
-           //P2->OUT = BIT7;
            g_dacVal = 4095;
            break;
        case SAWTOOTH:
@@ -204,7 +203,6 @@ void TA0_N_IRQHandler(void)
 {
     if(TIMER_A0->CCTL[1] & TIMER_A_CCTLN_CCIFG & waveOut == SQUARE)
     {
-        //P2->OUT = 0;
         g_dacVal = 0;
         TIMER_A0->CCTL[1] &= ~TIMER_A_CCTLN_CCIFG;
     }
@@ -212,7 +210,6 @@ void TA0_N_IRQHandler(void)
 
 void PORT5_IRQHandler(void)
 {
-    P2->OUT ^= BIT7;
     if(P5->IFG & (BIT4|BIT5|BIT6))
     {
         P5->IFG = 0;
