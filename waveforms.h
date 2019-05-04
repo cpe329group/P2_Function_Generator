@@ -14,9 +14,9 @@
 
 struct waveformInterface
 {
-    void(*square)(int freq, int duty);
-    void(*sine)(int freq);
-    void(*sawtooth)(int freq);
+    void(*square)(int fIn, int duty);
+    void(*sine)(int fIn);
+    void(*sawtooth)(int fIn);
 };
 
 extern const struct waveformInterface wave;
